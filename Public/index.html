@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DeathNote - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: radial-gradient(circle at 10% 30%, #0a0f1e, #03050b);
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #eef2ff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Background video (optional, remove if not wanted) */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 380px;
+            max-width: 90%;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            text-align: center;
+            animation: fadeUp 0.5s ease-out;
+        }
+        .card:hover {
+            border-color: #8B0000;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(139,0,0,0.3);
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo-img {
+            width: 180px;
+            max-width: 80%;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 8px #8B0000);
+            transition: transform 0.2s;
+        }
+        .logo-img:hover {
+            transform: scale(1.02);
+        }
+        .sub {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px dashed #8B0000;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 2rem;
+            color: #eef2ff;
+            font-family: 'Inter', monospace;
+            transition: 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #8B0000;
+            box-shadow: 0 0 0 2px rgba(139,0,0,0.3);
+        }
+        button {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            padding: 0.7rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background: #8B0000;
+            color: white;
+            border-color: white;
+            transform: scale(1.02);
+        }
+        .register-link {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+        .register-link a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        .error {
+            color: #ff6b6b;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay loop muted playsinline>
+        <source src="https://d.uguu.se/SdnvhOjq.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="card">
+        <img class="logo-img" src="https://d.uguu.se/pavwQeEi.jpg" alt="DeathNote Logo">
+        <div class="sub">"The human whose name is written..."</div>
+        <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <button onclick="login()">⚡ GET CREDENTIALS ⚡</button>
+        <div class="register-link">No account? <a href="register.html">Carve your name →</a></div>
+        <div id="errorMsg" class="error"></div>
+    </div>
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                document.getElementById('errorMsg').innerText = data.message;
+            }
+        }
+    </script>
+</body>
+</html>
