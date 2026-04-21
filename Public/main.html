@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeathNote - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: radial-gradient(circle at 10% 30%, #0a0f1e, #03050b);
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #eef2ff;
+            overflow-x: hidden;
+        }
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+        /* Hamburger button */
+        .hamburger {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 1100;
+            background: #0f172a;
+            border: 2px solid #8B0000;
+            font-size: 1.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #8B0000;
+        }
+        .hamburger:hover {
+            background: #8B0000;
+            color: white;
+            transform: scale(1.05);
+        }
+        /* Sidebar menu (glass) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(3, 5, 11, 0.95);
+            backdrop-filter: blur(16px);
+            border-right: 2px solid #8B0000;
+            box-shadow: 8px 0 30px rgba(139,0,0,0.2);
+            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 1000;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar a {
+            background: transparent;
+            border: none;
+            color: #cbd5f5;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .sidebar a i {
+            width: 24px;
+            color: #8B0000;
+        }
+        .sidebar a:hover {
+            background: rgba(139,0,0,0.15);
+            color: #8B0000;
+            border-color: #8B0000;
+            transform: translateX(5px);
+        }
+        .content {
+            padding: 80px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+        .glass-card:hover {
+            border-color: #8B0000;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(139,0,0,0.2);
+        }
+        .logo-img {
+            width: 200px;
+            display: block;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 0 12px #8B0000);
+        }
+        .quote {
+            text-align: center;
+            font-style: italic;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-family: monospace;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.4);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            text-align: center;
+            min-width: 140px;
+            border: 1px solid #8B0000;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: #8B0000;
+            margin-bottom: 0.5rem;
+        }
+        button {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #8B0000;
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .logo-img { width: 140px; }
+            .stat-card { min-width: 110px; }
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay loop muted playsinline>
+        <source src="https://d.uguu.se/SdnvhOjq.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="sidebar" id="sidebar">
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0 1rem 1rem; border-bottom: 2px solid #8B0000; margin-bottom: 1rem;">
+            <i class="fas fa-skull" style="font-size: 1.8rem; color:#8B0000;"></i>
+            <span style="font-weight: 800; font-size: 1.3rem;">DeathNote</span>
+        </div>
+        <a href="main.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="connect.html"><i class="fas fa-plug"></i> Connect WhatsApp</a>
+        <a href="ban.html"><i class="fas fa-gavel"></i> Ban Panel</a>
+        <a href="unban.html"><i class="fas fa-unlock-alt"></i> Unban Panel</a>
+        <a href="media.html"><i class="fas fa-download"></i> Media Downloader</a>
+        <a href="dev.html"><i class="fas fa-code"></i> Developer</a>
+        <a href="anime.html"><i class="fas fa-dragon"></i> Anime</a>
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="glass-card">
+            <img class="logo-img" src="https://d.uguu.se/pavwQeEi.jpg" alt="DeathNote Logo">
+            <div class="quote" id="quote">"The human whose name is written..."</div>
+            <div class="stats">
+                <div class="stat-card"><i class="fas fa-user"></i><h3 id="username">User</h3><p>Logged in</p></div>
+                <div class="stat-card"><i class="fab fa-whatsapp"></i><h3 id="sessionCount">0</h3><p>Active Sessions</p></div>
+                <div class="stat-card"><i class="fas fa-database"></i><h3 id="pendingCount">0</h3><p>Pending Actions</p></div>
+            </div>
+            <div style="text-align: center;">
+                <button onclick="location.href='connect.html'"><i class="fas fa-plus-circle"></i> Add WhatsApp Session</button>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3><i class="fas fa-newspaper"></i> Recent Activity</h3>
+            <div id="activityLog">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = 'index.html';
+        }
+        async function loadDashboard() {
+            const res = await fetch('/api/check-session');
+            const data = await res.json();
+            if (!data.loggedIn) window.location.href = 'index.html';
+            document.getElementById('username').innerText = data.user.username;
+            try {
+                const sessRes = await fetch('/api/sessions');
+                const sessData = await sessRes.json();
+                document.getElementById('sessionCount').innerText = sessData.count || 0;
+            } catch(e) { console.log(e); }
+            const quotes = ["I am justice.", "The note never forgets.", "Only the number is required.", "Eliminate with no mercy.", "This world is rotten.", "I'll take a potato chip... and eat it!"];
+            document.getElementById('quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('activityLog').innerHTML = "<p>✅ Last login: " + new Date().toLocaleString() + "</p><p>⚡ System ready.</p>";
+        }
+        loadDashboard();
+    </script>
+</body>
+</html>
