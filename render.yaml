@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: deathnote-webug
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    healthCheckPath: /api/stats
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: PORT
+        value: 3000
+    autoDeploy: true
+    disk:
+      name: alpha-prince-sessions
+      mountPath: /opt/render/project/src/AlphaPrince
+      sizeGB: 1
+    domains:
+      - deathnote-webug.onrender.com
