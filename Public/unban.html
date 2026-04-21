@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeathNote - Unban Request</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: radial-gradient(circle at 10% 30%, #0a0f1e, #03050b);
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #eef2ff;
+            overflow-x: hidden;
+        }
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+        }
+        .hamburger {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 1100;
+            background: #0f172a;
+            border: 2px solid #8B0000;
+            font-size: 1.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            color: #8B0000;
+        }
+        .hamburger:hover {
+            background: #8B0000;
+            color: white;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(3, 5, 11, 0.95);
+            backdrop-filter: blur(16px);
+            border-right: 2px solid #8B0000;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5f5;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .sidebar a i {
+            width: 24px;
+            color: #8B0000;
+        }
+        .sidebar a:hover {
+            background: rgba(139, 0, 0, 0.15);
+            color: #8B0000;
+            border-color: #8B0000;
+            transform: translateX(5px);
+        }
+        .content {
+            padding: 80px 20px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            transition: 0.2s;
+        }
+        .glass-card:hover {
+            border-color: #8B0000;
+            transform: translateY(-4px);
+        }
+        .logo-img {
+            width: 160px;
+            display: block;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 0 8px #8B0000);
+        }
+        h2, h3 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0,0,0,0.4);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            border: 1px solid #8B0000;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: #8B0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            overflow: hidden;
+        }
+        .user-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 0.5rem;
+            outline: none;
+        }
+        .user-input::placeholder {
+            color: #6b7280;
+        }
+        .banned-list {
+            background: rgba(0,0,0,0.3);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+        .banned-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid #334155;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .banned-item:hover, .banned-item.selected {
+            background: #8B0000;
+            border-radius: 0.5rem;
+        }
+        .banned-number {
+            font-weight: 600;
+        }
+        .banned-reason {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        button {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #8B0000;
+            color: white;
+        }
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            font-family: monospace;
+        }
+        .quote {
+            text-align: center;
+            font-style: italic;
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        .manual-input {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay loop muted playsinline>
+        <source src="https://d.uguu.se/SdnvhOjq.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="sidebar" id="sidebar">
+        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0 1rem 1rem; border-bottom: 2px solid #8B0000; margin-bottom: 1rem;">
+            <i class="fas fa-skull" style="font-size: 1.8rem; color:#8B0000;"></i>
+            <span style="font-weight: 800; font-size: 1.3rem;">DeathNote</span>
+        </div>
+        <a href="main.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="connect.html"><i class="fas fa-plug"></i> Connect WhatsApp</a>
+        <a href="ban.html"><i class="fas fa-gavel"></i> Ban Panel</a>
+        <a href="unban.html"><i class="fas fa-unlock-alt"></i> Unban Panel</a>
+        <a href="media.html"><i class="fas fa-download"></i> Media Downloader</a>
+        <a href="dev.html"><i class="fas fa-code"></i> Developer</a>
+        <a href="anime.html"><i class="fas fa-dragon"></i> Anime</a>
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="glass-card">
+            <img class="logo-img" src="https://d.uguu.se/pavwQeEi.jpg" alt="DeathNote Logo">
+            <h2><i class="fas fa-unlock-alt"></i> Unban Request</h2>
+            <div class="quote" id="randomQuote">Loading...</div>
+
+            <!-- Banned Numbers List -->
+            <h3><i class="fas fa-ban"></i> Currently Banned Numbers</h3>
+            <div id="bannedListContainer" class="banned-list">
+                <div style="text-align:center; padding:1rem;">Loading banned numbers...</div>
+            </div>
+
+            <!-- Or manually enter a number -->
+            <div class="manual-input">
+                <div class="user-box" style="flex:1; margin:0;">
+                    <div class="user-avatar"><i class="fas fa-plus-circle"></i></div>
+                    <input type="tel" id="manualNumber" class="user-input" placeholder="Or enter number manually">
+                </div>
+            </div>
+
+            <!-- Reason -->
+            <input type="text" id="unbanReason" placeholder="Reason for unban request (optional)">
+
+            <button id="requestUnbanBtn">📢 REQUEST UNBAN</button>
+            <div id="requestStatus" class="status" style="display:none;"></div>
+        </div>
+        <div class="footer">⚠️ Unban requests are sent to admin for approval. You will be notified when processed.</div>
+    </div>
+
+    <script>
+        let bannedNumbers = [];
+        let selectedNumber = null;
+
+        // Quotes
+        const quotes = [
+            "The weak deserves elimination.",
+            "Only the number is required.",
+            "Your name is already written.",
+            "I am justice.",
+            "This world is rotten.",
+            "Eliminate with no mercy.",
+            "The note never forgets.",
+            "I'll take a potato chip... and eat it!"
+        ];
+
+        function setRandomQuote() {
+            const idx = Math.floor(Math.random() * quotes.length);
+            document.getElementById('randomQuote').innerText = `"${quotes[idx]}"`;
+        }
+
+        // Fetch banned numbers from backend
+        async function fetchBannedNumbers() {
+            try {
+                const res = await fetch('/api/banned-numbers');
+                const data = await res.json();
+                if (data.numbers && Array.isArray(data.numbers)) {
+                    bannedNumbers = data.numbers;
+                } else {
+                    bannedNumbers = [];
+                }
+                renderBannedList();
+            } catch (err) {
+                console.error('Failed to fetch banned numbers:', err);
+                document.getElementById('bannedListContainer').innerHTML = '<div style="text-align:center; padding:1rem;">⚠️ Could not load banned list. Backend offline.</div>';
+            }
+        }
+
+        function renderBannedList() {
+            const container = document.getElementById('bannedListContainer');
+            if (!bannedNumbers.length) {
+                container.innerHTML = '<div style="text-align:center; padding:1rem;">📭 No banned numbers found.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            bannedNumbers.forEach(num => {
+                const item = document.createElement('div');
+                item.className = 'banned-item';
+                if (selectedNumber === num.number) item.classList.add('selected');
+                item.innerHTML = `
+                    <div>
+                        <div class="banned-number">+${num.number}</div>
+                        <div class="banned-reason">${num.reason || 'No reason provided'}</div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                `;
+                item.onclick = () => {
+                    document.querySelectorAll('.banned-item').forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+                    selectedNumber = num.number;
+                    // Also clear manual input
+                    document.getElementById('manualNumber').value = '';
+                };
+                container.appendChild(item);
+            });
+        }
+
+        // Request unban
+        document.getElementById('requestUnbanBtn').onclick = async () => {
+            let target = selectedNumber;
+            const manual = document.getElementById('manualNumber').value.trim();
+            if (manual) {
+                target = manual.replace(/\D/g, '');
+            }
+            if (!target) {
+                alert('Please select a number from the list or enter one manually.');
+                return;
+            }
+            const reason = document.getElementById('unbanReason').value.trim() || 'No reason provided';
+            const statusDiv = document.getElementById('requestStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending unban request to admin...';
+            try {
+                const res = await fetch('/api/request-unban', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: target, reason })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    statusDiv.innerHTML = `✅ Request sent! Admin will review. You will be notified when processed.<br>📓 Number: +${target}<br>📝 Reason: ${reason}`;
+                    document.getElementById('unbanReason').value = '';
+                    selectedNumber = null;
+                    renderBannedList();
+                } else {
+                    statusDiv.innerHTML = `❌ Failed: ${data.error || 'Unknown error'}`;
+                }
+            } catch (err) {
+                statusDiv.innerHTML = `❌ Error: ${err.message}`;
+            }
+        };
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = 'index.html';
+        }
+
+        // Initial load
+        fetchBannedNumbers();
+        setRandomQuote();
+        setInterval(setRandomQuote, 15000);
+    </script>
+</body>
+</html>
